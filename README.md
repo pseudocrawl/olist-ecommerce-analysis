@@ -2,7 +2,9 @@
 
 This is an end-to-end data analysis project on Brazilian e-commerce using Olist public dataset from Kaggle covering ~99,400 orders across 2 years. The goal was to extract actionable business insights across revenue, delivery, customer satisfaction, seller performance, and customer segmentation.
 
-📊 [View Interactive Dashboard](https://public.tableau.com/app/profile/hira.sajid3988/viz/OlistEcommerceAnalysis_17801418957140/OlistEcommerceAnalysis)
+[View Interactive Dashboard](https://public.tableau.com/app/profile/hira.sajid3988/viz/OlistEcommerceAnalysis_17801418957140/OlistEcommerceAnalysis)
+
+Detailed findings and methodology: [findings.md](https://github.com/pseudocrawl/olist-ecommerce-analysis/blob/main/findings.md)
 
 ---
 
