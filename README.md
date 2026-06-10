@@ -9,8 +9,9 @@ Detailed findings and methodology: [findings.md](https://github.com/pseudocrawl/
 ---
 
 ## Tools Used
-- **SQL** (SQLite) —  data exploration, data cleaning, window functions, CTEs, sub-queries, cohort analysis, RFM segmentation
-- **Tableau Public** — 6-chart interactive dashboard
+- **SQL** (SQLite) |  data exploration, data cleaning, window functions, CTEs, sub-queries, cohort analysis, RFM segmentation
+- **Python** (Jupyter Notebook) | cohort heatmap plotting
+- **Tableau Public** | 6-chart interactive dashboards
 
 ---
 
@@ -75,12 +76,14 @@ Detailed findings and methodology: [findings.md](https://github.com/pseudocrawl/
 | `sellers.sql` | Top sellers by revenue, Bayesian average rating, late delivery rate by seller |
 | `RFM.sql` | Recency, Frequency, Monetary scoring using PERCENT_RANK, customer segmentation |
 | `cohort_retention.sql` | Monthly cohort analysis, retention at M1, M3, M6 |
+| `cohort_retention.ipynb` | Visual representaion of cohort  analysis in heatmap |
 
 ---
 
 ## Dashboard Preview
 
-<img width="1331" height="790" alt="dashboard_preview" src="https://github.com/user-attachments/assets/d7b37331-7808-4f6e-9341-45692a425904" />
+<img width="1542" height="864" alt="tableau" src="https://github.com/user-attachments/assets/eeb8559a-b7f9-4d97-a1e8-d194250495e1" />
+
 
 ---
 
@@ -99,9 +102,5 @@ Detailed findings and methodology: [findings.md](https://github.com/pseudocrawl/
 --- 
 
 ## What I Learned
-Data cleaning took longer than the analysis itself — the dataset had 
-silent errors that only surfaced when query results looked off. I learned 
-to question every number before drawing conclusions. The most surprising 
-finding was near-zero retention — it only became obvious when visualized, 
-not when reading raw SQL output.
+Data cleaning took longer than the analysis itself, the dataset had silent errors that only surfaced when query results looked off. I learned to question every number before drawing conclusions. The most surprising finding was near-zero retention — it only became obvious when visualized, not when reading raw SQL output.
 
