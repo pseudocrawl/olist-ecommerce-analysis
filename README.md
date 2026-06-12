@@ -1,106 +1,88 @@
 # Olist E-Commerce Analysis (2016–2018)
-
-This is an end-to-end data analysis project on Brazilian e-commerce using Olist public dataset from Kaggle covering ~99,400 orders across 2 years. The goal was to extract actionable business insights across revenue, delivery, customer satisfaction, seller performance, and customer segmentation.
-
-[View Interactive Dashboard](https://public.tableau.com/views/EcommerceDataAnalysis_17810834157140/OlistEcommerceAnalysis?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
-
-Detailed findings and methodology: [findings.md](https://github.com/pseudocrawl/olist-ecommerce-analysis/blob/main/findings.md)
-
+ 
+End-to-end data analysis of Brazilian e-commerce using the Olist public dataset from Kaggle — covering ~99,400 orders across 2 years. The goal was to extract actionable business insights across revenue, delivery, customer satisfaction, seller performance, and customer segmentation.
+ 
+**[View Interactive Dashboard](https://public.tableau.com/views/EcommerceDataAnalysis_17810834157140/OlistEcommerceAnalysis?:language=en-GB&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)** | **[Full Findings & Methodology](findings.md)**
+ 
 ---
-
+ 
 ## Tools Used
-- **SQL** (SQLite) |  data exploration, data cleaning, window functions, CTEs, sub-queries, cohort analysis, RFM segmentation
-- **Python** (Jupyter Notebook) | cohort heatmap plotting
-- **Tableau Public** | 6-chart interactive dashboards
-
+ 
+**SQL** (SQLite) — data exploration, cleaning, window functions, CTEs, cohort analysis, RFM segmentation  
+**Python** (Jupyter Notebook) — cohort heatmap visualization  
+**Tableau Public** — 6-chart interactive dashboard
+ 
 ---
-
+ 
 ## Dataset
-- **Source:** [Kaggle — Brazilian E-Commerce by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/)
-- **Period:** September 2016 – October 2018
-- **Scale:** 9 tables, ~99,400 orders
-- **Setup:** Download the dataset from Kaggle, import CSV files into SQLite, run `data_cleaning.sql` before any analysis queries.
+ 
+**Source:** [Kaggle — Brazilian E-Commerce by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/)  
+**Period:** September 2016 – October 2018  
+**Scale:** 9 tables, ~99,400 orders  
 **Note:** All monetary values are in BRL (Brazilian Real).
+ 
+**Setup:** Download the dataset from Kaggle, import CSV files into SQLite, run `data_cleaning.sql` before any analysis queries.
+ 
+---
+ 
+## Key Findings
+ 
+**Revenue**
+- Total revenue: BRL 13.2M across 2 years | BRL 40.4K (2016) → BRL 5.6M (2017) → BRL 7.5M (2018) — **34.8% YoY growth**
+- Average order value: BRL 137 — most purchases are single mid-range items
+- Credit card dominates payments; expensive items show high installment usage, reflecting Brazil's parcelamento culture
+  
+**Cancellations**
+- 625 cancelled orders, BRL 95K in lost revenue (< 1% of total)
+- Broken down: 141 not approved by customers, 6 delivered but labelled cancelled (likely returns), **409 never handed to logistics** (329 seller-side delays identified), 69 lost in transit
+- Root cause is mostly seller-side failure to hand off to logistics, not product quality
+  
+**Delivery**
+- Average delivery time: 12.6 days | 91.8% on time, 8% late
+- Logistics handling averages 5 days; transit averages 25 days — the bottleneck is the logistics/carrier phase
+- SP (São Paulo) is fastest at 8.8 days due to 76% local deliveries; RR, AP, AM are slowest (26–30 days) with zero local deliveries
+  
+**Satisfaction**
+- Average review score: 4.16 / 5 | 59% give 5 stars, 9.7% give 1 star
+- Timely delivery avg score: 4.29 | Late delivery avg score: 2.57 — **late deliveries cut satisfaction by 40%**
+- 3 weeks is the customer patience threshold — scores drop a full point beyond 21 days
+  
+**Sellers**
+- Top 10 sellers identified by revenue, orders, AOV, and review score — high revenue does not always mean high satisfaction
+- Top-rated seller by Bayesian average: 313 reviews, 4.31 score (raw average was statistically misleading without volume weighting)
+- Top 10 worst late-delivery-rate sellers identified (minimum 10 orders threshold)
+  
+**Customer Segmentation (RFM)**
+- Champions: 721 | High Value Dormant: ~29K | Lost: ~10K
+- The 29K dormant high-spenders are the single largest recoverable revenue opportunity
+- Retention across all cohorts is under 1% — the business is entirely acquisition-dependent
+  
+**Shopping Behaviour**
+- Orders peak on **Monday at midday and 4 PM**
+- Sunday traffic is higher than Saturday — customers browse on weekends, convert on Monday
+- Best conversion window: **Sunday evening push → Monday morning**
   
 ---
-
-## Key Business Questions and Findings
-|Question|Finding|Insight|
-|---|---|---|
-|What is the scale and growth of revenue?|total: BRL ~13.2M , BRL ~40.4K (2016) -> BRL ~5.6M (2017) -> BRL ~7.5M (2018)| 34.8% YoY growth, consistent upward trend|
-|What did cancellations cost?| BRL ~95K revenue lost| less than 1% of total revenue, low risk |
-|What is the AOV?|BRL 137| suggests most purchases are single mid-range items rather than bulk buying|
-|How do customers pay?| credit card dominance - high installments on expensive items| reflects parcelamento culture |
-|Are deliveries on time?| 91.8% on time, 8% late | good percentage but late deliveries cost in satisfaction scores|
-|Which state has the best delivery time?|SP (8.8 days)|76% local deliveries in SP|
-|What is the average delivery time?| 12.6 days | fastest is 8.8 means average can be improved |
-|Which states have worst delivery?|RR (29.4 days), AP (27.2 days) , AM (26.4 days) | zero local deliveries in these states |
-|Does delivery speed affect satisfaction?| delivery review score - timely : 4.29 , late: 2.57| timely delivery is a crucial driver for customer satisfaction, late deliveries reduce customer satisfaction by 40%|
-|How much does each extra week cost in ratings?|0-3 days : 4.48 , 21+ days : 3.12|the decline in rating is gradual upto 21 days, after that it drops to full one point, 3 weeks is customer patience threshold|
-|How satisfied are customers overall?| average score: 4.16/5, 59% give 5 stars| generally positive, 9.7% give 1 star|
-|Which sellers perform best by revenue?|top 10 identified with total revenue, orders, AOV and review score | high revenue doesn't always mean high review score|
-|Which sellers have worst delivery rates?|top 10 worst identified (threshold: min 10 orders)|these sellers should be warned|
-|Who is the truly highest rated seller?| 313 reviews ,4.31 score | raw average was statistically misleading, used Bayesian average preventing sellers with few reviews from ranking unfairly high.|
-|Who are the most valuable customers?|Champions:721, High Value Dormant:29K,Lost:10k (full breakdown in dashboard)|Dormant class (29k) gives huge recoverable revenue opportunity|
-|Are customers coming back?|Under 1% retention across all cohorts|business entirely acquisition dependent, retention strategy needed|
-|When do customers shop most?|peak hours and days identified| Orders peak Monday at midday and 4pm, Sunday > Saturday, customers research on weekends, buy on Monday work breaks. Target Sunday evening for maximum conversion.|
-
----
-
-### RFM Segments Explained
-> RFM (Recency, Frequency, Monetary) segments customers based on purchase behavior. Here's what each segment means:
-
-| Segment | RFM Pattern | Means |
-|---|---|---|
-| Champion | R:3 F:3 M:3 | Best customers: recent, frequent, high spenders |
-| Loyal | R+F+M ≥ 6 | Strong overall, worth retaining |
-| High Value Dormant | M:3 F:1 | Spent big once, never returned, prime re-engagement target |
-| Promising | R≥2 F≥1 | Recent and active, potential loyals in the making |
-| New Customer | R:3 F:1 M:1 | Just arrived, needs nurturing |
-| At Risk | R:1 M:2 F:1 | Spent decently but going quiet, act before they're lost |
-| Lost | R:1 F:1 M:1 | Low on everything, likely gone |
-| Needs Attention | Everything else | Mixed signals|
-
----
-
+ 
 ## Project Structure
-
+ 
 | File | Description |
 |---|---|
 | `data_exploration.sql` | Dataset overview, order status metrics, price ranges, peak hours/days, geographic distribution |
 | `data_cleaning.sql` | Empty string handling, null checks, duplicate detection, invalid value checks, orphan record checks, zip code fixes |
-| `revenue.sql` | Total/yearly/monthly/quarterly revenue, MoM growth, running total, AOV, top categories |
-| `delivery.sql` | Average delivery time, on-time vs late analysis, delivery time by state |
+| `revenue.sql` | Total/yearly/monthly/quarterly revenue, MoM growth, running total, AOV, top categories, cancelled order breakdown |
+| `delivery.sql` | Average delivery time, on-time vs late analysis, delivery time by state, local vs non-local impact |
 | `satisfaction.sql` | Review score distribution, scores by category, delivery time vs satisfaction |
 | `payment.sql` | Revenue by payment type, installment analysis, one-shot vs installment orders |
 | `sellers.sql` | Top sellers by revenue, Bayesian average rating, late delivery rate by seller |
 | `RFM.sql` | Recency, Frequency, Monetary scoring using PERCENT_RANK, customer segmentation |
 | `cohort_retention.sql` | Monthly cohort analysis, retention at M1, M3, M6 |
-| `cohort_retention.ipynb` | Visual representaion of cohort  analysis in heatmap |
-
+| `olist_ecommerce_analysis.ipynb` | Cohort retention heatmap |
+ 
 ---
-
-## Dashboard Preview
+ 
 
 <img width="1542" height="864" alt="tableau" src="https://github.com/user-attachments/assets/eeb8559a-b7f9-4d97-a1e8-d194250495e1" />
 
-
----
-
-## Data Quality Issues Found & Handled
-
-| Issue | Action Taken |
-|---|---|
-| Empty strings and 'null' text values across all tables | Converted to real NULL using CASE WHEN TRIM() |
-| Invalid dates (84 orders) | Excluded in date-sensitive queries |
-| Zero freight values (383) | Excluded in freight analysis |
-| Duplicate review IDs (789) | Handled naturally by GROUP BY |
-|~23K customer zip codes and ~1K seller zip codes stored as INTEGER — lost leading zeros | Recreated both tables with TEXT type columns, then restored leading zeros using PRINTF('%05d')|
-| 775 order items with no order | Dropped automatically via INNER JOIN |
-| 610 products with missing category | Excluded from category analysis |
-
---- 
-
-## What I Learned
-Data cleaning took longer than the analysis itself, the dataset had silent errors that only surfaced when query results looked off. I learned to question every number before drawing conclusions. The most surprising finding was near-zero retention — it only became obvious when visualized, not when reading raw SQL output.
+----number before drawing conclusions. The most surprising finding was near-zero retention — it only became obvious when visualized, not when reading raw SQL output.
 
