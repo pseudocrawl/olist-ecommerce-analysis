@@ -108,3 +108,51 @@ FROM (
 )
 WHERE rnk <= 3
 ORDER BY category, rnk;
+
+----cancelled orders details---
+SELECT DISTINCT o.order_id, s.seller_id, o.order_purchase_timestamp AS purch, o.order_approved_at AS apr, 
+       o.order_delivered_carrier_date AS logs, o.order_delivered_customer_date AS deliv,
+       CASE WHEN (JULIANDAY(o.order_delivered_customer_date) <= JULIANDAY(o.order_estimated_delivery_date)) THEN 'timely_delivery'
+            ELSE 'late_or_no_delivery' END AS delivery_status
+FROM olist_orders_dataset o
+JOIN olist_order_items_dataset oi
+ON o.order_id = oi.order_id
+JOIN olist_sellers_dataset s
+ON s.seller_id = oi.seller_id
+WHERE o.order_status = 'canceled';
+
+
+---Sellers linked to Canceled Orders---
+WITH troubled_sellers AS
+
+( SELECT DISTINCT o.order_id AS order_id_, s.seller_id AS troubled_seller_id, o.order_purchase_timestamp AS purch, o.order_approved_at AS apr, 
+       o.order_delivered_carrier_date AS logs, o.order_delivered_customer_date AS deliv,
+       CASE WHEN (JULIANDAY(o.order_delivered_customer_date) <= JULIANDAY(o.order_estimated_delivery_date)) THEN 'timely_delivery'
+            ELSE 'late_or_no_delivery' END AS delivery_status
+FROM olist_orders_dataset o
+JOIN olist_order_items_dataset oi
+ON o.order_id = oi.order_id
+JOIN olist_sellers_dataset s
+ON s.seller_id = oi.seller_id
+WHERE o.order_status = 'canceled' AND o.order_approved_at IS NOT NULL )
+
+
+SELECT troubled_seller_id, COUNT(order_id_) AS total_orders
+FROM troubled_sellers
+GROUP BY troubled_seller_id
+ORDER BY total_orders DESC;
+
+---Products linked to Canceled Orders--
+SELECT DISTINCT o.order_id, p.product_id, pct.product_category_1,
+       CASE WHEN (JULIANDAY(o.order_delivered_customer_date) <= JULIANDAY(o.order_estimated_delivery_date)) THEN 'timely_delivery'
+            WHEN o.order_delivered_customer_date IS NULL THEN 'no_delivery'
+            ELSE 'late_delivery' END AS delivery_status
+FROM olist_orders_dataset o
+JOIN olist_order_items_dataset oi
+ON o.order_id = oi.order_id
+JOIN olist_products_dataset p
+ON p.product_id = oi.product_id
+JOIN product_category_name_translation pct
+ON p.product_category = pct.product_category
+WHERE o.order_status = 'canceled';
+
