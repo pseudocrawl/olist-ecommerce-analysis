@@ -29,3 +29,20 @@ JOIN olist_sellers_dataset s ON oi.seller_id = s.seller_id
 WHERE o.order_status = 'delivered' AND o.order_delivered_customer_date IS NOT NULL
 GROUP BY c.customer_state
 ORDER BY avg_delivery_time ASC;
+
+---Late Delivery Analysis---
+
+SELECT DISTINCT o.order_id, s.seller_state, c.customer_state, r.review_score,
+       ROUND(JULIANDAY(o.order_delivered_carrier_date) - JULIANDAY(o.order_approved_at),1)  AS handled_to_logistics,
+       ROUND(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_delivered_carrier_date),1) AS delivery_time
+FROM olist_orders_dataset o
+JOIN olist_order_items_dataset oi
+ON o.order_id = oi.order_id
+JOIN olist_sellers_dataset s
+ON s.seller_id = oi.seller_id
+JOIN olist_customers_dataset c
+ON c.customer_id = o.customer_id
+JOIN olist_order_reviews_dataset r
+ON r.order_id = o.order_id
+WHERE o.order_status = 'delivered' AND o.order_delivered_customer_date > o.order_estimated_delivery_date
+ORDEr BY handled_to_logistics DESC;
